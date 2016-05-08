@@ -8,6 +8,15 @@
 
 /* Begin PBXBuildFile section */
 		A35D48A81CDED882004CDC0C /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A35D48A71CDED882004CDC0C /* main.cpp */; };
+		A35D48AF1CDED8A1004CDC0C /* GLUT.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A35D48AE1CDED8A1004CDC0C /* GLUT.framework */; };
+		A35D48B11CDED8A8004CDC0C /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A35D48B01CDED8A8004CDC0C /* OpenGL.framework */; };
+		A35D48B41CDED8BB004CDC0C /* CG.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A35D48B21CDED8BB004CDC0C /* CG.cpp */; };
+		A35D48B71CDED932004CDC0C /* CGScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A35D48B51CDED932004CDC0C /* CGScene.cpp */; };
+		A35D48BA1CDED9AB004CDC0C /* CGNode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A35D48B81CDED9AB004CDC0C /* CGNode.cpp */; };
+		A35D48BD1CDEEA06004CDC0C /* CGGeometry.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A35D48BB1CDEEA06004CDC0C /* CGGeometry.cpp */; };
+		A35D48C01CDEEA94004CDC0C /* CGBox.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A35D48BE1CDEEA94004CDC0C /* CGBox.cpp */; };
+		A35D48C31CDEFDB7004CDC0C /* CGCamera.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A35D48C11CDEFDB7004CDC0C /* CGCamera.cpp */; };
+		A37AF4561CDF0B9C004B0779 /* CGLight.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A37AF4541CDF0B9C004B0779 /* CGLight.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -25,6 +34,22 @@
 /* Begin PBXFileReference section */
 		A35D48A41CDED882004CDC0C /* GLUT3DApp */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = GLUT3DApp; sourceTree = BUILT_PRODUCTS_DIR; };
 		A35D48A71CDED882004CDC0C /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
+		A35D48AE1CDED8A1004CDC0C /* GLUT.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLUT.framework; path = System/Library/Frameworks/GLUT.framework; sourceTree = SDKROOT; };
+		A35D48B01CDED8A8004CDC0C /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
+		A35D48B21CDED8BB004CDC0C /* CG.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CG.cpp; sourceTree = "<group>"; };
+		A35D48B31CDED8BB004CDC0C /* CG.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = CG.hpp; sourceTree = "<group>"; };
+		A35D48B51CDED932004CDC0C /* CGScene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CGScene.cpp; sourceTree = "<group>"; };
+		A35D48B61CDED932004CDC0C /* CGScene.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = CGScene.hpp; sourceTree = "<group>"; };
+		A35D48B81CDED9AB004CDC0C /* CGNode.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CGNode.cpp; sourceTree = "<group>"; };
+		A35D48B91CDED9AB004CDC0C /* CGNode.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = CGNode.hpp; sourceTree = "<group>"; };
+		A35D48BB1CDEEA06004CDC0C /* CGGeometry.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CGGeometry.cpp; sourceTree = "<group>"; };
+		A35D48BC1CDEEA06004CDC0C /* CGGeometry.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = CGGeometry.hpp; sourceTree = "<group>"; };
+		A35D48BE1CDEEA94004CDC0C /* CGBox.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CGBox.cpp; sourceTree = "<group>"; };
+		A35D48BF1CDEEA94004CDC0C /* CGBox.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = CGBox.hpp; sourceTree = "<group>"; };
+		A35D48C11CDEFDB7004CDC0C /* CGCamera.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CGCamera.cpp; sourceTree = "<group>"; };
+		A35D48C21CDEFDB7004CDC0C /* CGCamera.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = CGCamera.hpp; sourceTree = "<group>"; };
+		A37AF4541CDF0B9C004B0779 /* CGLight.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CGLight.cpp; sourceTree = "<group>"; };
+		A37AF4551CDF0B9C004B0779 /* CGLight.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = CGLight.hpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -32,6 +57,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A35D48B11CDED8A8004CDC0C /* OpenGL.framework in Frameworks */,
+				A35D48AF1CDED8A1004CDC0C /* GLUT.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -41,6 +68,8 @@
 		A35D489B1CDED882004CDC0C = {
 			isa = PBXGroup;
 			children = (
+				A35D48B01CDED8A8004CDC0C /* OpenGL.framework */,
+				A35D48AE1CDED8A1004CDC0C /* GLUT.framework */,
 				A35D48A61CDED882004CDC0C /* GLUT3DApp */,
 				A35D48A51CDED882004CDC0C /* Products */,
 			);
@@ -57,7 +86,21 @@
 		A35D48A61CDED882004CDC0C /* GLUT3DApp */ = {
 			isa = PBXGroup;
 			children = (
+				A35D48B31CDED8BB004CDC0C /* CG.hpp */,
+				A35D48B21CDED8BB004CDC0C /* CG.cpp */,
 				A35D48A71CDED882004CDC0C /* main.cpp */,
+				A35D48B61CDED932004CDC0C /* CGScene.hpp */,
+				A35D48B51CDED932004CDC0C /* CGScene.cpp */,
+				A35D48B81CDED9AB004CDC0C /* CGNode.cpp */,
+				A35D48B91CDED9AB004CDC0C /* CGNode.hpp */,
+				A35D48BC1CDEEA06004CDC0C /* CGGeometry.hpp */,
+				A35D48BB1CDEEA06004CDC0C /* CGGeometry.cpp */,
+				A35D48BF1CDEEA94004CDC0C /* CGBox.hpp */,
+				A35D48BE1CDEEA94004CDC0C /* CGBox.cpp */,
+				A35D48C21CDEFDB7004CDC0C /* CGCamera.hpp */,
+				A35D48C11CDEFDB7004CDC0C /* CGCamera.cpp */,
+				A37AF4551CDF0B9C004B0779 /* CGLight.hpp */,
+				A37AF4541CDF0B9C004B0779 /* CGLight.cpp */,
 			);
 			path = GLUT3DApp;
 			sourceTree = "<group>";
@@ -119,6 +162,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				A35D48A81CDED882004CDC0C /* main.cpp in Sources */,
+				A35D48B41CDED8BB004CDC0C /* CG.cpp in Sources */,
+				A35D48B71CDED932004CDC0C /* CGScene.cpp in Sources */,
+				A35D48BD1CDEEA06004CDC0C /* CGGeometry.cpp in Sources */,
+				A35D48BA1CDED9AB004CDC0C /* CGNode.cpp in Sources */,
+				A35D48C01CDEEA94004CDC0C /* CGBox.cpp in Sources */,
+				A37AF4561CDF0B9C004B0779 /* CGLight.cpp in Sources */,
+				A35D48C31CDEFDB7004CDC0C /* CGCamera.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -209,6 +259,7 @@
 		A35D48AC1CDED882004CDC0C /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				MACOSX_DEPLOYMENT_TARGET = 10.8;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -216,6 +267,7 @@
 		A35D48AD1CDED882004CDC0C /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				MACOSX_DEPLOYMENT_TARGET = 10.8;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
@@ -239,6 +291,7 @@
 				A35D48AD1CDED882004CDC0C /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
