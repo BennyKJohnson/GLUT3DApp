@@ -11,6 +11,12 @@
 
 #include <stdio.h>
 #include "CGGeometry.hpp"
+#ifdef __APPLE__
+#include <GLUT/GLUT.h> //GLUT Library, will make you life easier
+#include <OpenGL/OpenGL.h> //OpenGL Library
+#elif defined _WIN32 || defined _WIN64
+#include <glut.h>
+#endif
 
 class CGBox: public CGGeometry {
     

@@ -37,7 +37,7 @@ void CGScene::renderNode(CGNode *node) {
         return;
     }
     
-    glLoadIdentity();
+    glPushMatrix();
     translate(node->position);
     glRotatef(node->rotation.w, node->rotation.x, node->rotation.y, node->rotation.z);
     
@@ -79,22 +79,27 @@ void CGScene::renderNode(CGNode *node) {
         lightCount++;
         
     }
+    
+    glPopMatrix();
 }
 
 CGScene::CGScene() {
     
     rootNode = new CGNode();
     
-    backgroundColor = CGColorBlack();
+    backgroundColor = CGColorWhite();
+    
+    globalAmbientColor = CGColor(0.2, 0.2, 0.2, 1.0);
     
     lightCount = 0;
     
 }
 
 void CGScene::render() {
-    
+    // Setup Lighting
     lightCount = 0;
     
+
     //Multi-colored side - FRONT
     if (rootNode == NULL) {
         return;

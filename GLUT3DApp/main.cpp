@@ -23,6 +23,7 @@
 
 
 int mainWindow;
+
 CGScene *scene;
 
 CGNode *pointOfView;
@@ -33,10 +34,16 @@ enum ContextMenu {
 };
 
 
+
 GLfloat aspect;
 
-GLfloat movementSpeed = 1;
+GLfloat movementSpeed = 0.5;
 
+GLenum shadeModel = GL_SMOOTH;
+
+GLenum cullFaceMode = GL_BACK;
+
+bool yellowAmbientEnabled = false;
 
 void setOGLProjection(int width, int height) {
     glViewport(0, 0, width, height);
@@ -66,6 +73,26 @@ void mouseHandler(int button, int state, int x, int y) {
     }
 }
 
+void toggleShadeModel() {
+    if (shadeModel == GL_SMOOTH) {
+        shadeModel = GL_FLAT;
+        
+    } else {
+        shadeModel = GL_SMOOTH;
+    }
+    
+    glShadeModel(shadeModel);
+    glutPostRedisplay();
+}
+
+void toggleOpenGLSetting(GLenum property) {
+    if (glIsEnabled(property)) {
+        glDisable(property);
+    } else {
+        glEnable(property);
+    }
+}
+
 void setPolygonMode(CGPolygonMode mode) {
     switch (mode) {
         case CGPolygonModeWire:
@@ -85,20 +112,33 @@ void updateCamera() {
     CGCamera *camera = pointOfView->camera;
     gluPerspective(camera->yFov, aspect, camera->zNear, camera->zFar);
     
-    // actual vector representing the camera's direction
-    float lookX = sinf(pointOfView->rotation.w);
-    float lookZ = -cos(pointOfView->rotation.w);
-    //  lz=-1.0f;
-    
-    float x = pointOfView->position.x ;
-    float z = pointOfView->position.z;
-    
-    gluLookAt(pointOfView->position.x, pointOfView->position.y, pointOfView->position.z, x + lookX, 1.0, z + lookZ, 0, 1, 0);
-    
+  
     glutPostRedisplay();
    // windowShouldRedraw();
 }
 
+
+void toggleAmbientLighting() {
+    if (yellowAmbientEnabled) {
+        scene->globalAmbientColor = CGColor(0.2, 0.2, 0.2, 1.0);
+        yellowAmbientEnabled = false;
+    } else {
+        scene->globalAmbientColor = CGColorSimpleYellow();
+        yellowAmbientEnabled = true;
+    }
+    glLightModelfv(GL_LIGHT_MODEL_AMBIENT, scene->globalAmbientColor.values());
+}
+
+void toggleCullFace() {
+    if (cullFaceMode == GL_BACK) {
+        cullFaceMode = GL_FRONT;
+    } else {
+        cullFaceMode = GL_BACK;
+    }
+    
+    glCullFace(cullFaceMode);
+    
+}
 
 void keyboardHandler(unsigned char key, int x, int y)
 {
@@ -111,7 +151,28 @@ void keyboardHandler(unsigned char key, int x, int y)
             break;
         case 's':  setPolygonMode(CGPolygonModeSolid);
             break;
-        default: break;
+        case 'z':
+            toggleShadeModel();
+            break;
+        
+        case 'd':
+            toggleOpenGLSetting(GL_DEPTH_TEST);
+            break;
+        case 'c':
+            toggleOpenGLSetting(GL_CULL_FACE);
+            break;
+        case 'f':
+            toggleCullFace();
+            break;
+        case 'm':
+            toggleOpenGLSetting(GL_COLOR_MATERIAL);
+            break;
+        case 'l':
+            toggleAmbientLighting();
+            break;
+        
+        default:
+            break;
     };
 }
 
@@ -133,6 +194,7 @@ void specialKeyHandler(int key, int x, int y)
             break;
             //if arrow up pressed
         case GLUT_KEY_UP:
+          //  teapotNode->position.x += 1;
             pointOfView->position.x += movementSpeed;
             
             //gMoveForward += gMovementSensitivity;             //increment forward movement
@@ -194,21 +256,38 @@ CGRect getWindowRect() {
 
 void render(void){
     
+  
     // Setup Scene background color
     CGColor backgroundColor = scene->backgroundColor;
     glClearColor(backgroundColor.r, backgroundColor.g, backgroundColor.b, backgroundColor.a);
-    
+
     //  Clear screen and Z-buffer
     glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
     glMatrixMode(GL_MODELVIEW);     // To operate on model-view matrix
 
+    glLoadIdentity();
+    // Set Camera
+    // actual vector representing the camera's direction
+    float lookX = sinf(pointOfView->rotation.w);
+    float lookZ = -cos(pointOfView->rotation.w);
+    //  lz=-1.0f;
+    
+    float x = pointOfView->position.x ;
+    float z = pointOfView->position.z;
+    
+   // CGVector3 lookAt = CGVector3(0,0, 0)
+
+    
+    gluLookAt(pointOfView->position.x, pointOfView->position.y, pointOfView->position.z, x + lookX, 1.0, z + lookZ, 0, 1, 0);
+    
     // Set background color to white and opaque
    // glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
     
     scene->render();
     
-    glutSwapBuffers();
-    
+  //  glutSwapBuffers();
+    glFlush();
+
 }
 
 void setupScene() {
@@ -223,6 +302,8 @@ void setupScene() {
     glutDisplayFunc(render);
     glutReshapeFunc(resize);
     glutMouseFunc(mouseHandler);
+    glutIdleFunc(render);
+
     
     scene = new CGScene();
     // Create Cube node
@@ -234,17 +315,22 @@ void setupScene() {
     CGNode *cubeNode2 = new CGNode();
     cubeNode2->geometry = new CGBox(1,1,1);
     cubeNode2->position = CGVector3(0, 0, -7);
-    cubeNode2->hidden = true;
+    cubeNode2->hidden = false;
     
     CGNode *pyramidNode = new CGNode(new CGPyramid(1,1,1));
     pyramidNode->position = CGVector3(0, 0, -7);
     
-    CGNode *planeNode  = new CGNode(new CGPlane(1,1));
-    planeNode->position = CGVector3(0, 0, -7);
-    planeNode->rotation = CGVector4(1, 0, 0, 45);
+    CGNode *floorNode  = new CGNode(new CGPlane(100,100));
+    floorNode->position = CGVector3(0, 0, -7);
+    floorNode->rotation = CGVector4(1, 0, 0, 5);
     
-    CGNode *teapotNode = new CGNode(new CGTeapot(1));
-    teapotNode->position = CGVector3(0 , 1, -7);
+    CGNode *leftWallNode  = new CGNode(new CGPlane(100,100));
+    leftWallNode->position = CGVector3(0, 0, -7);
+    leftWallNode->rotation = CGVector4(1, 0, 0, -90);
+    
+    CGNode *teapotNode;
+    teapotNode = new CGNode(new CGTeapot(0.3));
+    teapotNode->position = CGVector3(0 , 1.15, -7);
     
     CGLight *light1 = new CGLight();
     CGNode *lightNode = new CGNode();
@@ -253,8 +339,10 @@ void setupScene() {
     light1->color = CGColorWhite();
     
     scene->rootNode->addChildNode(lightNode);
-    scene->rootNode->addChildNode(planeNode);
+    scene->rootNode->addChildNode(floorNode);
     scene->rootNode->addChildNode(teapotNode);
+    scene->rootNode->addChildNode(cubeNode2);
+    scene->rootNode->addChildNode(leftWallNode);
     
     scene->backgroundColor = CGColorWhite();
   //  scene->rootNode->addChildNode(cubeNode);
@@ -273,12 +361,14 @@ void initOpenGL() {
     glEnable(GL_DEPTH_TEST);   // Enable depth testing for z-culling
     
     glDepthFunc(GL_LEQUAL);    // Set the type of depth-test
-    glShadeModel(GL_SMOOTH);   // Enable smooth shading
+    glShadeModel(shadeModel);   // Enable smooth shading
     glutKeyboardFunc(keyboardHandler);
     glutSpecialFunc(specialKeyHandler);
     glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);  // Nice perspective corrections
 
 }
+
+
 
 
 
@@ -290,7 +380,7 @@ int main(int argc, char * argv[]) {
     glutInit(&argc, argv);
 #endif
     
-    glutInitDisplayMode(GLUT_DOUBLE);
+    glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB | GLUT_DEPTH);      //requests properties for the window (sets up the rendering context)
 
     //Specify the Display Mode, this one means there is a single buffer and uses RGB to specify colors
     // glutInitDisplayMode(GLUT_DEPTH| GLUT_DOUBLE |GLUT_RGB);
@@ -303,7 +393,8 @@ int main(int argc, char * argv[]) {
     
     //Name the window and create it
     mainWindow = glutCreateWindow("3D App");
-    
+    glutSetWindow(mainWindow);
+
     //  Enable Z-buffer depth test
     glEnable(GL_DEPTH_TEST);
     

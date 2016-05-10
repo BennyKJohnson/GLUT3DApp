@@ -26,7 +26,13 @@ class CGScene {
     int lightCount;
     
      GLenum currentLightID();
+    
+    
+    
 public:
+    CGColor globalAmbientColor;
+
+    
     CGNode *rootNode;
     
     void render();
