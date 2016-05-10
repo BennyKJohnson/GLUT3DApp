@@ -13,6 +13,12 @@
 #include <string>
 #include <vector>
 
+typedef enum CGPolygonMode {
+    CGPolygonModeSolid,
+    CGPolygonModeWire
+} CGPolygonMode;
+
+
 typedef struct CGVector3 {
     
     float x,y,z;
@@ -28,7 +34,7 @@ typedef struct CGVector3 {
         this->y = y;
         this->z = z;
     }
-   
+    
     
 } CGVector3;
 
@@ -87,6 +93,23 @@ typedef struct CGColor {
     float g;
     float b;
     float a;
+    
+    CGColor(float r, float g, float b, float a) {
+        this->r = r;
+        this->g = g;
+        this->b = b;
+        this->a = a;
+    }
+    
+    CGColor() {
+        
+    }
+    
+    float* values() {
+        static float values[] = {r,g,b,a};
+        return values;
+    }
+    
     bool operator==(const CGColor& rhs) const
     {
         return r == rhs.r && g == rhs.g && b == rhs.b;

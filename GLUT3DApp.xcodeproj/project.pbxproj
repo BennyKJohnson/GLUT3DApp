@@ -14,9 +14,12 @@
 		A35D48B71CDED932004CDC0C /* CGScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A35D48B51CDED932004CDC0C /* CGScene.cpp */; };
 		A35D48BA1CDED9AB004CDC0C /* CGNode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A35D48B81CDED9AB004CDC0C /* CGNode.cpp */; };
 		A35D48BD1CDEEA06004CDC0C /* CGGeometry.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A35D48BB1CDEEA06004CDC0C /* CGGeometry.cpp */; };
-		A35D48C01CDEEA94004CDC0C /* CGBox.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A35D48BE1CDEEA94004CDC0C /* CGBox.cpp */; };
+		A35D48C01CDEEA94004CDC0C /* CGParametricGeometry.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A35D48BE1CDEEA94004CDC0C /* CGParametricGeometry.cpp */; };
 		A35D48C31CDEFDB7004CDC0C /* CGCamera.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A35D48C11CDEFDB7004CDC0C /* CGCamera.cpp */; };
 		A37AF4561CDF0B9C004B0779 /* CGLight.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A37AF4541CDF0B9C004B0779 /* CGLight.cpp */; };
+		A37AF4591CDFF731004B0779 /* CGMaterial.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A37AF4571CDFF731004B0779 /* CGMaterial.cpp */; };
+		A37AF48C1CE02B06004B0779 /* CGGeometrySource.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A37AF48A1CE02B06004B0779 /* CGGeometrySource.cpp */; };
+		A37AF48F1CE02E9A004B0779 /* CGGeometryElement.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A37AF48D1CE02E9A004B0779 /* CGGeometryElement.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -44,12 +47,18 @@
 		A35D48B91CDED9AB004CDC0C /* CGNode.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = CGNode.hpp; sourceTree = "<group>"; };
 		A35D48BB1CDEEA06004CDC0C /* CGGeometry.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CGGeometry.cpp; sourceTree = "<group>"; };
 		A35D48BC1CDEEA06004CDC0C /* CGGeometry.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = CGGeometry.hpp; sourceTree = "<group>"; };
-		A35D48BE1CDEEA94004CDC0C /* CGBox.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CGBox.cpp; sourceTree = "<group>"; };
-		A35D48BF1CDEEA94004CDC0C /* CGBox.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = CGBox.hpp; sourceTree = "<group>"; };
+		A35D48BE1CDEEA94004CDC0C /* CGParametricGeometry.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CGParametricGeometry.cpp; sourceTree = "<group>"; };
+		A35D48BF1CDEEA94004CDC0C /* CGParametricGeometry.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = CGParametricGeometry.hpp; sourceTree = "<group>"; };
 		A35D48C11CDEFDB7004CDC0C /* CGCamera.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CGCamera.cpp; sourceTree = "<group>"; };
 		A35D48C21CDEFDB7004CDC0C /* CGCamera.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = CGCamera.hpp; sourceTree = "<group>"; };
 		A37AF4541CDF0B9C004B0779 /* CGLight.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CGLight.cpp; sourceTree = "<group>"; };
 		A37AF4551CDF0B9C004B0779 /* CGLight.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = CGLight.hpp; sourceTree = "<group>"; };
+		A37AF4571CDFF731004B0779 /* CGMaterial.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CGMaterial.cpp; sourceTree = "<group>"; };
+		A37AF4581CDFF731004B0779 /* CGMaterial.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = CGMaterial.hpp; sourceTree = "<group>"; };
+		A37AF48A1CE02B06004B0779 /* CGGeometrySource.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CGGeometrySource.cpp; sourceTree = "<group>"; };
+		A37AF48B1CE02B06004B0779 /* CGGeometrySource.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = CGGeometrySource.hpp; sourceTree = "<group>"; };
+		A37AF48D1CE02E9A004B0779 /* CGGeometryElement.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CGGeometryElement.cpp; sourceTree = "<group>"; };
+		A37AF48E1CE02E9A004B0779 /* CGGeometryElement.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = CGGeometryElement.hpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -86,23 +95,37 @@
 		A35D48A61CDED882004CDC0C /* GLUT3DApp */ = {
 			isa = PBXGroup;
 			children = (
+				A37AF4891CE007F9004B0779 /* CG */,
+				A35D48A71CDED882004CDC0C /* main.cpp */,
+			);
+			path = GLUT3DApp;
+			sourceTree = "<group>";
+		};
+		A37AF4891CE007F9004B0779 /* CG */ = {
+			isa = PBXGroup;
+			children = (
 				A35D48B31CDED8BB004CDC0C /* CG.hpp */,
 				A35D48B21CDED8BB004CDC0C /* CG.cpp */,
-				A35D48A71CDED882004CDC0C /* main.cpp */,
 				A35D48B61CDED932004CDC0C /* CGScene.hpp */,
 				A35D48B51CDED932004CDC0C /* CGScene.cpp */,
-				A35D48B81CDED9AB004CDC0C /* CGNode.cpp */,
 				A35D48B91CDED9AB004CDC0C /* CGNode.hpp */,
+				A35D48B81CDED9AB004CDC0C /* CGNode.cpp */,
 				A35D48BC1CDEEA06004CDC0C /* CGGeometry.hpp */,
 				A35D48BB1CDEEA06004CDC0C /* CGGeometry.cpp */,
-				A35D48BF1CDEEA94004CDC0C /* CGBox.hpp */,
-				A35D48BE1CDEEA94004CDC0C /* CGBox.cpp */,
+				A35D48BF1CDEEA94004CDC0C /* CGParametricGeometry.hpp */,
+				A35D48BE1CDEEA94004CDC0C /* CGParametricGeometry.cpp */,
 				A35D48C21CDEFDB7004CDC0C /* CGCamera.hpp */,
 				A35D48C11CDEFDB7004CDC0C /* CGCamera.cpp */,
 				A37AF4551CDF0B9C004B0779 /* CGLight.hpp */,
 				A37AF4541CDF0B9C004B0779 /* CGLight.cpp */,
+				A37AF4581CDFF731004B0779 /* CGMaterial.hpp */,
+				A37AF4571CDFF731004B0779 /* CGMaterial.cpp */,
+				A37AF48B1CE02B06004B0779 /* CGGeometrySource.hpp */,
+				A37AF48A1CE02B06004B0779 /* CGGeometrySource.cpp */,
+				A37AF48E1CE02E9A004B0779 /* CGGeometryElement.hpp */,
+				A37AF48D1CE02E9A004B0779 /* CGGeometryElement.cpp */,
 			);
-			path = GLUT3DApp;
+			name = CG;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -164,9 +187,12 @@
 				A35D48A81CDED882004CDC0C /* main.cpp in Sources */,
 				A35D48B41CDED8BB004CDC0C /* CG.cpp in Sources */,
 				A35D48B71CDED932004CDC0C /* CGScene.cpp in Sources */,
+				A37AF4591CDFF731004B0779 /* CGMaterial.cpp in Sources */,
+				A37AF48C1CE02B06004B0779 /* CGGeometrySource.cpp in Sources */,
 				A35D48BD1CDEEA06004CDC0C /* CGGeometry.cpp in Sources */,
 				A35D48BA1CDED9AB004CDC0C /* CGNode.cpp in Sources */,
-				A35D48C01CDEEA94004CDC0C /* CGBox.cpp in Sources */,
+				A37AF48F1CE02E9A004B0779 /* CGGeometryElement.cpp in Sources */,
+				A35D48C01CDEEA94004CDC0C /* CGParametricGeometry.cpp in Sources */,
 				A37AF4561CDF0B9C004B0779 /* CGLight.cpp in Sources */,
 				A35D48C31CDEFDB7004CDC0C /* CGCamera.cpp in Sources */,
 			);

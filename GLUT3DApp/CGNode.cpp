@@ -16,6 +16,37 @@ void CGNode::addChildNode(CGNode *node) {
 }
 
 CGNode::CGNode() {
-   
+
+    this->hidden = false;
+    
+    this->position = CGVector3();
+    
+    camera = NULL;
+    
+    light = NULL;
+    
+    geometry = NULL;
+    
+}
+
+CGNode::CGNode(CGGeometry *geometry) {
+    
+    this->geometry = geometry;
+    
+    this->hidden = false;
+    
+    camera = NULL;
+    
+    light = NULL;
+    
+}
+
+void CGNode::removeFromParentNode() {
+    
+    if (parentNode != NULL) {
+        //parentNode->childNodes.po
+    }
+    
+    
     
 }

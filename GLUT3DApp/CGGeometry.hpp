@@ -10,13 +10,33 @@
 #define CGGeometry_hpp
 
 #include <stdio.h>
+#include <vector>
+#include "CGMaterial.hpp"
+#include "CGGeometrySource.hpp"
+#include <string>
 
 class CGGeometry {
     
     
-    
 public:
-   virtual void render();
+    
+    std::vector<CGMaterial*> materials;
+    
+    std::vector<CGGeometrySource*> geometrySources;
+    
+    
+    virtual void presentationGeometry();
+    
+    CGMaterial* firstMaterial();
+    
+    CGMaterial* materialWithName(std::string* name);
+    
+    CGGeometry() {
+        materials.push_back(new CGMaterial());
+      //  this->materials.push_back(CGMaterial());
+        
+    }
+    
 };
 
 #endif /* CGGeometry_hpp */

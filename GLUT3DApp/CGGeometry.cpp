@@ -8,6 +8,25 @@
 
 #include "CGGeometry.hpp"
 
-void CGGeometry::render() {
+void CGGeometry::presentationGeometry() {
     
+}
+
+CGMaterial* CGGeometry::firstMaterial() {
+    
+    return materials[0];
+    
+}
+
+CGMaterial* CGGeometry::materialWithName(std::string* name) {
+    
+    for (int i = 0; i < materials.size(); i++) {
+        CGMaterial *material = materials[i];
+        
+        if (material->name != NULL && *material->name == *name) {
+            return material;
+        }
+    }
+    
+    return NULL;
 }

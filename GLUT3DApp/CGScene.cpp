@@ -7,15 +7,35 @@
 //
 
 #include "CGScene.hpp"
-#ifdef __APPLE__
-#include <GLUT/GLUT.h> //GLUT Library, will make you life easier
-#include <OpenGL/OpenGL.h> //OpenGL Library
-#elif defined _WIN32 || defined _WIN64
-#include <glut.h>
-#endif
 
+GLenum CGScene::currentLightID() {
+    switch (lightCount) {
+        case 0:
+            return GL_LIGHT0;
+        case 1:
+            return GL_LIGHT1;
+        case 2:
+            return GL_LIGHT2;
+        case 3:
+            return GL_LIGHT3;
+        case 4:
+            return GL_LIGHT4;
+        case 5:
+            return GL_LIGHT5;
+        case 6:
+            return GL_LIGHT6;
+        case 7:
+            return GL_LIGHT7;
+        default:
+            return GL_LIGHT7;
+    }
+}
 
 void CGScene::renderNode(CGNode *node) {
+    
+    if(node->hidden) {
+        return;
+    }
     
     glLoadIdentity();
     translate(node->position);
@@ -23,46 +43,57 @@ void CGScene::renderNode(CGNode *node) {
     
     // Add Geometry
     if (node->geometry != NULL) {
-        node->geometry->render();
+    
+        // Load Material
+        CGMaterial *material = node->geometry->firstMaterial();
+        if (material != NULL) {
+            
+          //  material->loadMaterial();
+            
+        }
+        
+        node->geometry->presentationGeometry();
+     
     }
     
     // Add Light
     if (node->light != NULL) {
+        
         CGLight *light = node->light;
-        GLenum lightID = GL_LIGHT0;
+        
+        GLenum lightID = currentLightID();
         GLfloat position[] = {node->position.x, node->position.y, node->position.z, 1.0};
-        GLfloat color[] = {light->color.r, light->color.g, light->color.b, light->color.a};
         
         // Set position
         glLightfv(lightID, GL_POSITION, position);
-        glLightfv(lightID, GL_DIFFUSE, color);
-    
         
+        float colorValues[] = {light->color.r, light->color.g, light->color.b, light->color.a};
+        
+        // Set Color
+        glLightfv(lightID, GL_AMBIENT, colorValues);
+        glLightfv(lightID, GL_DIFFUSE, colorValues);
+        
+        // Enable Light
+        glEnable(lightID);
+    
+        lightCount++;
         
     }
 }
 
 CGScene::CGScene() {
+    
     rootNode = new CGNode();
+    
+    backgroundColor = CGColorBlack();
+    
+    lightCount = 0;
     
 }
 
 void CGScene::render() {
     
-    
-    
-    // Reset transformations
-
-    // Other Transformations
-    // glTranslatef( 0.1, 0.0, 0.0 );      // Not included
-    // glRotatef( 180, 0.0, 1.0, 0.0 );    // Not included
-    
-    // Rotate when user changes rotate_x and rotate_y
- //   glRotatef( 45, 1.0, 0.0, 0.0 );
- //   glRotatef( rotate_y, 0.0, 1.0, 0.0 );
-    
-    // Other Transformations
-    // glScalef( 2.0, 2.0, 0.0 );          // Not included
+    lightCount = 0;
     
     //Multi-colored side - FRONT
     if (rootNode == NULL) {

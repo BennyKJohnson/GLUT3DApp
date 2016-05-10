@@ -119,6 +119,8 @@ void drawPoint(CGPoint point, CGColor color) {
 
 
 
+
+
 bool hitTestWithRect(CGRect rect, CGPoint point) {
     
     return (point.x >= rect.origin.x && point.x <= rect.origin.x + rect.size.width &&

@@ -10,16 +10,32 @@
 #define CGScene_hpp
 
 #include <stdio.h>
+#ifdef __APPLE__
+#include <GLUT/GLUT.h> //GLUT Library, will make you life easier
+#include <OpenGL/OpenGL.h> //OpenGL Library
+#elif defined _WIN32 || defined _WIN64
+#include <glut.h>
+#endif
+
 #include "CGNode.hpp"
 
 class CGScene {
     
+    void renderNode(CGNode *node);
     
+    int lightCount;
+    
+     GLenum currentLightID();
 public:
     CGNode *rootNode;
+    
     void render();
-    void renderNode(CGNode *node);
+    
+    CGColor backgroundColor;
+    
     CGScene();
+    
+    
 };
 
 

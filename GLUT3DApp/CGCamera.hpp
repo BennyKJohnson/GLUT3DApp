@@ -24,6 +24,8 @@ public:
     
     double xFov;
     
+    bool usesOrthographicProjection;
+    
     CGCamera() {
         
         this->zNear = 1.0;
@@ -31,6 +33,8 @@ public:
         this->zFar = 100.0;
         
         this->yFov = 45.0;
+        
+        usesOrthographicProjection = false;
         
     }
     

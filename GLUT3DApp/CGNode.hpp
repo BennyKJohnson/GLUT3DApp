@@ -21,7 +21,7 @@ class CGNode {
     
     
 public:
-    std::string name;
+    std::string *name;
     
     CGNode *parentNode;
     
@@ -35,13 +35,22 @@ public:
     
     void addChildNode(CGNode*);
     
+    void removeFromParentNode();
+    
     CGNode* childNodeWithName(std::string name, bool recursively);
     
     CGVector3 position;
     
     CGVector4 rotation;
     
+    CGVector3 scale;
+    
+    bool hidden;
+    
     CGNode();
+    
+    CGNode(CGGeometry *geometry);
+    
 };
 
 #endif /* CGNode_hpp */

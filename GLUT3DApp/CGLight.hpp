@@ -12,13 +12,30 @@
 #include <stdio.h>
 #include "CG.hpp"
 
+typedef enum CGLightType {
+    CGLightTypeAmbient,
+    CGLightTypeOmni,
+    CGLightTypeDirectional,
+    CGLightTypeSpot
+} CGLightType;
+
 class CGLight {
     
     
 public:
+    
     CGColor color;
+    
+    CGLightType type;
+    
     void render();
     
+    CGLight() {
+    
+        color = CGColorSimpleYellow();
+        
+        type = CGLightTypeAmbient;
+    }
     
 };
 
