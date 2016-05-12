@@ -20,6 +20,7 @@
 		A37AF4591CDFF731004B0779 /* CGMaterial.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A37AF4571CDFF731004B0779 /* CGMaterial.cpp */; };
 		A37AF48C1CE02B06004B0779 /* CGGeometrySource.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A37AF48A1CE02B06004B0779 /* CGGeometrySource.cpp */; };
 		A37AF48F1CE02E9A004B0779 /* CGGeometryElement.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A37AF48D1CE02E9A004B0779 /* CGGeometryElement.cpp */; };
+		A37AF4F01CE3EF99004B0779 /* CGPresetMaterials.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A37AF4EE1CE3EF98004B0779 /* CGPresetMaterials.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -59,6 +60,8 @@
 		A37AF48B1CE02B06004B0779 /* CGGeometrySource.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = CGGeometrySource.hpp; sourceTree = "<group>"; };
 		A37AF48D1CE02E9A004B0779 /* CGGeometryElement.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CGGeometryElement.cpp; sourceTree = "<group>"; };
 		A37AF48E1CE02E9A004B0779 /* CGGeometryElement.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = CGGeometryElement.hpp; sourceTree = "<group>"; };
+		A37AF4EE1CE3EF98004B0779 /* CGPresetMaterials.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CGPresetMaterials.cpp; sourceTree = "<group>"; };
+		A37AF4EF1CE3EF98004B0779 /* CGPresetMaterials.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = CGPresetMaterials.hpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -124,6 +127,8 @@
 				A37AF48A1CE02B06004B0779 /* CGGeometrySource.cpp */,
 				A37AF48E1CE02E9A004B0779 /* CGGeometryElement.hpp */,
 				A37AF48D1CE02E9A004B0779 /* CGGeometryElement.cpp */,
+				A37AF4EE1CE3EF98004B0779 /* CGPresetMaterials.cpp */,
+				A37AF4EF1CE3EF98004B0779 /* CGPresetMaterials.hpp */,
 			);
 			name = CG;
 			sourceTree = "<group>";
@@ -193,6 +198,7 @@
 				A35D48BA1CDED9AB004CDC0C /* CGNode.cpp in Sources */,
 				A37AF48F1CE02E9A004B0779 /* CGGeometryElement.cpp in Sources */,
 				A35D48C01CDEEA94004CDC0C /* CGParametricGeometry.cpp in Sources */,
+				A37AF4F01CE3EF99004B0779 /* CGPresetMaterials.cpp in Sources */,
 				A37AF4561CDF0B9C004B0779 /* CGLight.cpp in Sources */,
 				A35D48C31CDEFDB7004CDC0C /* CGCamera.cpp in Sources */,
 			);

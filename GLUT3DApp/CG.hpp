@@ -105,10 +105,7 @@ typedef struct CGColor {
         
     }
     
-    float* values() {
-        static float values[] = {r,g,b,a};
-        return values;
-    }
+
     
     bool operator==(const CGColor& rhs) const
     {

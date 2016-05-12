@@ -31,6 +31,8 @@ public:
     
     CGMaterial* materialWithName(std::string* name);
     
+    void setMaterial(CGMaterial* material);
+    
     CGGeometry() {
         materials.push_back(new CGMaterial());
       //  this->materials.push_back(CGMaterial());

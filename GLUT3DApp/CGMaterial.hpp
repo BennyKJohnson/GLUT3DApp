@@ -40,7 +40,7 @@ public:
         
         ambient = CGColor(0.2, 0.2, 0.2, 1);
         
-        diffuse = CGColorBlue(); //CGColor(1, 1, 1, 1.0);
+        diffuse = CGColor(1.0, 1.0, 1.0, 1.0);
         
         specular = CGColor(0, 0, 0, 1);
         

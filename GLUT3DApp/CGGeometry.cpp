@@ -18,6 +18,15 @@ CGMaterial* CGGeometry::firstMaterial() {
     
 }
 
+void CGGeometry::setMaterial(CGMaterial* material) {
+    
+    materials.pop_back();
+    materials.push_back(material);
+    
+}
+
+
+
 CGMaterial* CGGeometry::materialWithName(std::string* name) {
     
     for (int i = 0; i < materials.size(); i++) {

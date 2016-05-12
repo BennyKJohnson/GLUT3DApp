@@ -63,7 +63,7 @@ public:
         widthSegmentCount = 1;
         
         heightSegmentCount = 1;
-        
+      //  glutsolid
     }
     
     void presentationGeometry();
@@ -121,32 +121,90 @@ public:
     void presentationGeometry();
 };
 
-class CGCone {
-    
+class CGCone: public CGGeometry {
     
 public:
     
-    float width;
+    float bottomRadius;
     
     float height;
     
-    int segments;
+    int heightSegmentCont;
     
-    CGCone(float width, float height, int segments) {
+    int radialSegmentCount;
+    
+    CGCone(float bottomRadius, float height) {
         
-        this->width = width;
+        this->bottomRadius = bottomRadius;
+        
         this->height = height;
-        this->segments = segments;
+        
+        heightSegmentCont = 1;
+        
+        radialSegmentCount = 48;
         
     }
     
     void presentationGeometry() {
-        glutSolidCone(width, height, segments, segments);
+    
+        glutSolidCone(bottomRadius, height, radialSegmentCount, heightSegmentCont);
+    }
+};
+
+class CGDodecahedron: public CGGeometry {
+    
+public:
+    
+    CGDodecahedron() {}
+    
+    void presentationGeometry() {
+        
+        glutSolidDodecahedron();
+        
+    }
+};
+
+class CGOctahedron: public CGGeometry {
+    
+public:
+    
+    CGOctahedron() {}
+    
+    void presentationGeometry() {
+        
+        glutSolidOctahedron();
+        
+    }
+};
+
+class CGTetrahedron: public CGGeometry {
+    
+public:
+    
+    CGTetrahedron() {}
+    
+    void presentationGeometry() {
+        
+        glutSolidTetrahedron();
+        
+    }
+};
+
+class CGIcosahedron: public CGGeometry {
+    
+public:
+    
+    CGIcosahedron() {}
+    
+    void presentationGeometry() {
+        
+        glutSolidIcosahedron();
+        
     }
 };
 
 
-class CGTorus {
+class CGTorus: public CGGeometry {
     
     
 public:

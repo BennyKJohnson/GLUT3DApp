@@ -40,7 +40,7 @@ void CGScene::renderNode(CGNode *node) {
     glPushMatrix();
     translate(node->position);
     glRotatef(node->rotation.w, node->rotation.x, node->rotation.y, node->rotation.z);
-    
+    glScalef(node->scale.x, node->scale.y, node->scale.z);
     // Add Geometry
     if (node->geometry != NULL) {
     
@@ -48,7 +48,7 @@ void CGScene::renderNode(CGNode *node) {
         CGMaterial *material = node->geometry->firstMaterial();
         if (material != NULL) {
             
-          //  material->loadMaterial();
+          material->loadMaterial();
             
         }
         
@@ -80,6 +80,12 @@ void CGScene::renderNode(CGNode *node) {
         
     }
     
+    // Render Child nodes
+    for (int i = 0; i < node->childNodes.size(); i++) {
+        CGNode *childNode = node->childNodes[i];
+        renderNode(childNode);
+    }
+    
     glPopMatrix();
 }
 
@@ -96,21 +102,16 @@ CGScene::CGScene() {
 }
 
 void CGScene::render() {
+    
     // Setup Lighting
     lightCount = 0;
     
-
-    //Multi-colored side - FRONT
+    // Check if root node exists
     if (rootNode == NULL) {
         return;
     }
     
-    // Render Child nodes
-    for (int i = 0; i < rootNode->childNodes.size(); i++) {
-        CGNode *node = rootNode->childNodes[i];
-        renderNode(node);
-    }
-    
-    
-    
+    // Render root node recursively render all child nodes
+    renderNode(rootNode);
+
 }

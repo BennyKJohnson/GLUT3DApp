@@ -21,6 +21,8 @@ CGNode::CGNode() {
     
     this->position = CGVector3();
     
+    this->scale = CGVector3(1,1,1);
+    
     camera = NULL;
     
     light = NULL;
@@ -34,6 +36,8 @@ CGNode::CGNode(CGGeometry *geometry) {
     this->geometry = geometry;
     
     this->hidden = false;
+    
+    this->scale = CGVector3(1,1,1);
     
     camera = NULL;
     

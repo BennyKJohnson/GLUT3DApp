@@ -19,7 +19,11 @@
 #include "CG.hpp"
 #include "CGScene.hpp"
 #include "CGParametricGeometry.hpp"
+#include "CGPresetMaterials.hpp"
 #include <math.h>
+
+#define MY_PI 		(3.14159265359)    //declare PI value
+#define DEG2RAD(a) 	(MY_PI/180*(a))    //convert degrees into radians
 
 
 int mainWindow;
@@ -37,7 +41,13 @@ enum ContextMenu {
 
 GLfloat aspect;
 
-GLfloat movementSpeed = 0.5;
+GLfloat movementSpeed = 0.2;
+
+GLfloat cameraYaw = 0.0;
+
+GLfloat moveForward = 0.0;
+
+GLfloat rotationSpeed = 2;
 
 GLenum shadeModel = GL_SMOOTH;
 
@@ -106,13 +116,31 @@ void setPolygonMode(CGPolygonMode mode) {
 
 void updateCamera() {
     
+    if (cameraYaw > 360.0) {
+        cameraYaw -= 360.0;
+    } else if(cameraYaw < 0.0)
+        cameraYaw += 360.0;
+    
+    pointOfView->position.x += sinf(DEG2RAD(cameraYaw)) * moveForward;
+    pointOfView->position.y += -cos(DEG2RAD(cameraYaw)) * moveForward;
+    
+    moveForward = 0;
+    
+    float lookAtX =  pointOfView->position.x + sin(DEG2RAD(cameraYaw));
+    float lookAtZ =  pointOfView->position.z + sin(DEG2RAD(cameraYaw));
+    
+    
     glLoadIdentity();
     
     // Enable perspective projection with fovy, aspect, zNear and zFar
     CGCamera *camera = pointOfView->camera;
     gluPerspective(camera->yFov, aspect, camera->zNear, camera->zFar);
     
-  
+    gluLookAt(pointOfView->position.x, pointOfView->position.y, pointOfView->position.z, lookAtX, 1.0, lookAtZ, 0, 1, 0);
+
+    
+    
+    
     glutPostRedisplay();
    // windowShouldRedraw();
 }
@@ -126,7 +154,9 @@ void toggleAmbientLighting() {
         scene->globalAmbientColor = CGColorSimpleYellow();
         yellowAmbientEnabled = true;
     }
-    glLightModelfv(GL_LIGHT_MODEL_AMBIENT, scene->globalAmbientColor.values());
+    
+    float values[] {scene->globalAmbientColor.r, scene->globalAmbientColor.b, scene->globalAmbientColor.g, scene->globalAmbientColor.a};
+    glLightModelfv(GL_LIGHT_MODEL_AMBIENT, values);
 }
 
 void toggleCullFace() {
@@ -207,14 +237,15 @@ void specialKeyHandler(int key, int x, int y)
             break;
             //if left pressed
         case GLUT_KEY_LEFT:
-            pointOfView->position.x -= movementSpeed;
-
+          //  pointOfView->position.x -= movementSpeed;
+            cameraYaw -= rotationSpeed;
+            
             //gCameraYaw -= gRotationSensitivity;               //increment camera yaw
             break;
             //if right pressed
         case GLUT_KEY_RIGHT:
-            pointOfView->position.x += movementSpeed;
-
+            //pointOfView->position.x += movementSpeed;
+            cameraYaw += rotationSpeed;
             //gCameraYaw += gRotationSensitivity;              //decrement camera yaw
             break;
         default: break;
@@ -278,7 +309,7 @@ void render(void){
    // CGVector3 lookAt = CGVector3(0,0, 0)
 
     
-    gluLookAt(pointOfView->position.x, pointOfView->position.y, pointOfView->position.z, x + lookX, 1.0, z + lookZ, 0, 1, 0);
+  //  gluLookAt(pointOfView->position.x, pointOfView->position.y, pointOfView->position.z, x + lookX, 1.0, z + lookZ, 0, 1, 0);
     
     // Set background color to white and opaque
    // glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
@@ -290,47 +321,7 @@ void render(void){
 
 }
 
-void setupScene() {
-    
-    // Setup Camera
-    CGCamera *sceneCamera = new CGCamera();
-    CGNode *cameraNode = new CGNode();
-    cameraNode->position = CGVector3(0,1,0);
-    cameraNode->camera = sceneCamera;
-    pointOfView = cameraNode;
-    
-    glutDisplayFunc(render);
-    glutReshapeFunc(resize);
-    glutMouseFunc(mouseHandler);
-    glutIdleFunc(render);
-
-    
-    scene = new CGScene();
-    // Create Cube node
-    CGNode *cubeNode = new CGNode();
-    cubeNode->geometry = new CGBox(1,1,1);
-    cubeNode->position = CGVector3(1.5, 0, -7);
-    cubeNode->rotation = CGVector4(1, 1, 0, 45);
-    
-    CGNode *cubeNode2 = new CGNode();
-    cubeNode2->geometry = new CGBox(1,1,1);
-    cubeNode2->position = CGVector3(0, 0, -7);
-    cubeNode2->hidden = false;
-    
-    CGNode *pyramidNode = new CGNode(new CGPyramid(1,1,1));
-    pyramidNode->position = CGVector3(0, 0, -7);
-    
-    CGNode *floorNode  = new CGNode(new CGPlane(100,100));
-    floorNode->position = CGVector3(0, 0, -7);
-    floorNode->rotation = CGVector4(1, 0, 0, 5);
-    
-    CGNode *leftWallNode  = new CGNode(new CGPlane(100,100));
-    leftWallNode->position = CGVector3(0, 0, -7);
-    leftWallNode->rotation = CGVector4(1, 0, 0, -90);
-    
-    CGNode *teapotNode;
-    teapotNode = new CGNode(new CGTeapot(0.3));
-    teapotNode->position = CGVector3(0 , 1.15, -7);
+void setupLights() {
     
     CGLight *light1 = new CGLight();
     CGNode *lightNode = new CGNode();
@@ -338,27 +329,161 @@ void setupScene() {
     lightNode->light = light1;
     light1->color = CGColorWhite();
     
+    CGLight *light2 = new CGLight();
+    light2->color = CGColorBlue();
+    CGNode *lightNode2 = new CGNode();
+    lightNode2->position = CGVector3(6.0, 15.0, 5.0);
+    lightNode2->light = light2;
+    
     scene->rootNode->addChildNode(lightNode);
+  //  scene->rootNode->addChildNode(lightNode2);
+}
+
+void setupCamera() {
+    // Setup Camera
+    CGCamera *sceneCamera = new CGCamera();
+    CGNode *cameraNode = new CGNode();
+    cameraNode->position = CGVector3(0,1,0);
+    cameraNode->camera = sceneCamera;
+    pointOfView = cameraNode;
+    
+}
+
+void setupObjects() {
+    
+    // Table
+    CGNode *tableNode = new CGNode();
+    tableNode->position = CGVector3(0, 0, -7);
+    //cubeNode->rotation = CGVector4(1, 1, 0, 45);
+    
+    CGNode *tableTopNode = new CGNode(new CGBox(1,1,1));
+    tableTopNode->scale = CGVector3(1,0.05,1);
+    tableTopNode->position = CGVector3(0,0.95,0);
+    
+    CGNode *leftLegNode = new CGNode(new CGBox(1,1,1));
+    leftLegNode->scale = CGVector3(0.1,1,0.11);
+    leftLegNode->position = CGVector3(0,0,0);
+    
+    
+    
+    tableNode->addChildNode(tableTopNode);
+    tableNode->addChildNode(leftLegNode);
+    
+    // Floor
+    CGNode *floorNode  = new CGNode(new CGPlane(100,100));
+    floorNode->position = CGVector3(0, 0, -7);
+    floorNode->rotation = CGVector4(1, 0, 0, 5);
+    
+    // Left wall
+    CGNode *leftWallNode  = new CGNode(new CGPlane(100,100));
+    leftWallNode->position = CGVector3(0, 0, -7);
+    leftWallNode->rotation = CGVector4(1, 0, 0, -90);
+    
+    // Teapot
+    CGGeometry *teapot = new CGTeapot(0.3);
+    teapot->setMaterial(CGPresentMaterial::goldMaterial());
+    CGNode *teapotNode = new CGNode(teapot);
+    teapotNode->position = CGVector3(0 , 1.15, -7);
+    
+    // Sphere
+    CGSphere *sphere = new CGSphere(0.2);
+    sphere->setMaterial(CGPresentMaterial::jadeMaterial());
+    CGNode *sphereNode = new CGNode(sphere);
+    sphereNode->position = CGVector3(-1, 1.2, -7);
+    
+    // Cone
+    CGCone *cone = new CGCone(0.15 , 0.3);
+    cone->setMaterial(CGPresentMaterial::blueMaterial());
+    CGNode *coneNode = new CGNode(cone);
+    coneNode->position = CGVector3(1, 1.0, -7);
+    coneNode->rotation = CGVector4(1,0,0,-90);
+    
+    // Torus
+    CGTorus *torus = new CGTorus(0.1,0.05);
+    torus->setMaterial(CGPresentMaterial::copperMaterial());
+    CGNode *torusNode = new CGNode(torus);
+    
+    torusNode->position = CGVector3(0.7, 1.2, -7);
+
+    // Dodecahedron
+    CGDodecahedron *dodecahedron = new CGDodecahedron();
+    dodecahedron->setMaterial(CGPresentMaterial::rubyMaterial());
+    CGNode *dodecahedronNode = new CGNode(dodecahedron);
+    dodecahedronNode->position = CGVector3(0.7, 1.2, -7);
+    dodecahedronNode->scale = CGVector3(0.1,0.1,0.1);
+    
+    // Octahedron
+    CGOctahedron *octahedron = new CGOctahedron();
+    octahedron->setMaterial(CGPresentMaterial::cyanMaterial());
+    CGNode *octahedronNode = new CGNode(octahedron);
+    octahedronNode->position = CGVector3(-0.1,0.9, -7);
+    octahedronNode->scale = CGVector3(0.2,0.2,0.2);
+    
+    // Tetrahedron
+    CGTetrahedron *tetrahedron = new CGTetrahedron();
+    tetrahedron->setMaterial(CGPresentMaterial::redMaterial());
+    CGNode *tetrahedronNode = new CGNode(tetrahedron);
+    tetrahedronNode->position = CGVector3(0.7,0.7, -7);
+    tetrahedronNode->scale = CGVector3(0.5,0.5,0.5);
+    
+    // Icosahedron
+    CGIcosahedron *icosahedron = new CGIcosahedron();
+    icosahedron->setMaterial(CGPresentMaterial::rubyMaterial());
+    CGNode *icosahedronNode = new CGNode(icosahedron);
+    icosahedronNode->position = CGVector3(0.7,0.9, -7);
+    icosahedronNode->scale = CGVector3(0.3,0.3,0.3);
+    
+    
+/*
+    
+    scene->rootNode->addChildNode(tableNode);
+ //   scene->rootNode->addChildNode(cubeNode2);
+ //   scene->rootNode->addChildNode(coneNode);
+    */
     scene->rootNode->addChildNode(floorNode);
+   // scene->rootNode->addChildNode(leftWallNode);
+ 
+    // Add ornaments
     scene->rootNode->addChildNode(teapotNode);
-    scene->rootNode->addChildNode(cubeNode2);
-    scene->rootNode->addChildNode(leftWallNode);
+
+    
+    
+    scene->rootNode->addChildNode(sphereNode);
+    scene->rootNode->addChildNode(coneNode);
+    scene->rootNode->addChildNode(torusNode);
+    scene->rootNode->addChildNode(dodecahedronNode);
+    scene->rootNode->addChildNode(octahedronNode);
+    scene->rootNode->addChildNode(tetrahedronNode);
+    scene->rootNode->addChildNode(icosahedronNode);
+
+}
+
+void setupScene() {
+    
+    scene = new CGScene();
     
     scene->backgroundColor = CGColorWhite();
-  //  scene->rootNode->addChildNode(cubeNode);
-  //  scene->rootNode->addChildNode(cubeNode2);
-  //  scene->rootNode->addChildNode(pyramidNode);
+
+    setupCamera();
     
+    setupObjects();
     
+    setupLights();
+
 }
 
 void initOpenGL() {
     
+    glutDisplayFunc(render);
+    glutReshapeFunc(resize);
+    glutMouseFunc(mouseHandler);
+    glutIdleFunc(render);
+    
     setupScene();
     
-    glClearDepth(1.0f);                   // Set background depth to farthest
+    glClearDepth(1.0f);       // Set background depth to farthest
     glEnable(GL_LIGHTING);    //enable lighting
-    glEnable(GL_DEPTH_TEST);   // Enable depth testing for z-culling
+    glEnable(GL_DEPTH_TEST);  // Enable depth testing for z-culling
     
     glDepthFunc(GL_LEQUAL);    // Set the type of depth-test
     glShadeModel(shadeModel);   // Enable smooth shading
@@ -367,11 +492,6 @@ void initOpenGL() {
     glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);  // Nice perspective corrections
 
 }
-
-
-
-
-
 
 int main(int argc, char * argv[]) {
     
