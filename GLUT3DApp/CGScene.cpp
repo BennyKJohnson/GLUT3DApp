@@ -39,7 +39,20 @@ void CGScene::renderNode(CGNode *node) {
     
     glPushMatrix();
     translate(node->position);
-    glRotatef(node->rotation.w, node->rotation.x, node->rotation.y, node->rotation.z);
+    
+    // Check if euler angles is unmodified
+    if (node->eulerAngles == CGVector3()) {
+        
+        glRotatef(node->rotation.w, node->rotation.x, node->rotation.y, node->rotation.z);
+        
+    } else {
+        // Use Euler Angles
+        CGVector3 eulerAngles = node->eulerAngles;
+        glRotatef(eulerAngles.x, 1, 0, 0);
+        glRotatef(eulerAngles.y, 0, 1, 0);
+        glRotatef(eulerAngles.z, 0, 0, 1);
+        
+    }
     glScalef(node->scale.x, node->scale.y, node->scale.z);
     // Add Geometry
     if (node->geometry != NULL) {
@@ -62,7 +75,11 @@ void CGScene::renderNode(CGNode *node) {
         CGLight *light = node->light;
         
         GLenum lightID = currentLightID();
-        GLfloat position[] = {node->position.x, node->position.y, node->position.z, 1.0};
+        float lightW = 1.0;
+        if (light->type == CGLightTypeDirectional) {
+            lightW = 0.0;
+        }
+        GLfloat position[] = {node->position.x, node->position.y, node->position.z, lightW};
         
         // Set position
         glLightfv(lightID, GL_POSITION, position);
@@ -72,6 +89,13 @@ void CGScene::renderNode(CGNode *node) {
         // Set Color
         glLightfv(lightID, GL_AMBIENT, colorValues);
         glLightfv(lightID, GL_DIFFUSE, colorValues);
+        
+        if (light->type == CGLightTypeSpot) {
+            
+            // Set Spot light related properties
+            glLightf(lightID, GL_SPOT_CUTOFF, light->spotOuterAngle);
+        }
+        
         
         // Enable Light
         glEnable(lightID);
@@ -98,6 +122,8 @@ CGScene::CGScene() {
     globalAmbientColor = CGColor(0.2, 0.2, 0.2, 1.0);
     
     lightCount = 0;
+    
+    autoenablesDefaultLighting = false;
     
 }
 

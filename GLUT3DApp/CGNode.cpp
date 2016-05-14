@@ -39,6 +39,8 @@ CGNode::CGNode(CGGeometry *geometry) {
     
     this->scale = CGVector3(1,1,1);
     
+    this->eulerAngles = CGVector3(0,0,0);
+    
     camera = NULL;
     
     light = NULL;
@@ -50,7 +52,27 @@ void CGNode::removeFromParentNode() {
     if (parentNode != NULL) {
         //parentNode->childNodes.po
     }
+}
+
+CGNode::CGNode( const CGNode &obj) {
     
+    hidden = obj.hidden;
+
+    // Copy references to objects
+    
+    geometry = obj.geometry;
+    
+    light = obj.light;
+    
+    camera = obj.camera;
+    
+    // Copy position information
+    
+    position = obj.position;
+    
+    scale = obj.scale;
+    
+    rotation = obj.rotation;
     
     
 }

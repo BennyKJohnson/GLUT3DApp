@@ -41,6 +41,14 @@ public:
         
         return material;
         
+    }
+    
+    static CGMaterial* orangeMaterial() {
+        
+        CGMaterial *material = new CGMaterial();
+        material->diffuse = CGColorSimpleOrange();
+        
+        return material;
         
     }
     

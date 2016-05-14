@@ -43,6 +43,8 @@ public:
     
     CGVector4 rotation;
     
+    CGVector3 eulerAngles;
+    
     CGVector3 scale;
     
     bool hidden;
@@ -50,6 +52,9 @@ public:
     CGNode();
     
     CGNode(CGGeometry *geometry);
+    
+    CGNode( const CGNode &obj);  // copy constructor
+
     
 };
 

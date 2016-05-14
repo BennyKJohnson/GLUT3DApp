@@ -25,13 +25,15 @@ class CGScene {
     
     int lightCount;
     
-     GLenum currentLightID();
+    GLenum currentLightID();
     
     
     
 public:
     CGColor globalAmbientColor;
 
+    bool autoenablesDefaultLighting;
+    
     
     CGNode *rootNode;
     

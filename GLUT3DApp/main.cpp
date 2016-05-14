@@ -37,8 +37,6 @@ enum ContextMenu {
     Exit
 };
 
-
-
 GLfloat aspect;
 
 GLfloat movementSpeed = 0.2;
@@ -54,6 +52,8 @@ GLenum shadeModel = GL_SMOOTH;
 GLenum cullFaceMode = GL_BACK;
 
 bool yellowAmbientEnabled = false;
+
+void resetCamera();
 
 void setOGLProjection(int width, int height) {
     glViewport(0, 0, width, height);
@@ -145,6 +145,10 @@ void updateCamera() {
 
 
 void toggleAmbientLighting() {
+    if (!scene->autoenablesDefaultLighting) {
+        return;
+    }
+
     if (yellowAmbientEnabled) {
         scene->globalAmbientColor = CGColor(0.2, 0.2, 0.2, 1.0);
         yellowAmbientEnabled = false;
@@ -198,7 +202,9 @@ void keyboardHandler(unsigned char key, int x, int y)
         case 'l':
             toggleAmbientLighting();
             break;
-        
+        case 'r':
+            resetCamera();
+            break;
         default:
             break;
     };
@@ -338,37 +344,96 @@ void setupCamera() {
     
 }
 
-void setupObjects() {
+void resetCamera() {
+    pointOfView->position = CGVector3(0,1,5);
+    moveForward = 0;
+    cameraYaw = 0;
+    
+    glutPostRedisplay();
+}
+
+CGNode* createTable() {
     
     float zPosition = 0;
-    
+
     // Table
+    float tableLeftPosition = -0.9;
+    float tableRightPosition = 0.9;
+    float tableVerticalPosition = -0.1;
+    
     CGNode *tableNode = new CGNode();
     tableNode->position = CGVector3(0, 0, zPosition);
     //cubeNode->rotation = CGVector4(1, 1, 0, 45);
     
-    CGNode *tableTopNode = new CGNode(new CGBox(1,1,1));
+    CGBox *tableComponent = new CGBox(1,1,1);
+    tableComponent->setMaterial(CGPresentMaterial::orangeMaterial());
+    
+    
+    CGNode *tableTopNode = new CGNode(tableComponent);
     tableTopNode->scale = CGVector3(1,0.05,1);
     tableTopNode->position = CGVector3(0,0.95,0);
     
-    CGNode *leftLegNode = new CGNode(new CGBox(1,1,1));
-    leftLegNode->scale = CGVector3(0.1,1,0.11);
-    leftLegNode->position = CGVector3(0,0,0);
     
+    CGNode *leftBottomLegNode = new CGNode(tableComponent);
+    leftBottomLegNode->scale = CGVector3(0.1,1,0.11);
+    leftBottomLegNode->position = CGVector3(tableLeftPosition, tableVerticalPosition, 1);
+    
+    CGNode *rightBottomLegNode = new CGNode(*leftBottomLegNode);
+    rightBottomLegNode->position = CGVector3(tableRightPosition,tableVerticalPosition,1);
+    
+    CGNode *leftTopLegNode = new CGNode(*leftBottomLegNode);
+    leftTopLegNode->position = CGVector3(tableLeftPosition,tableVerticalPosition,-0.8);
+    
+    CGNode *rightTopLegNode = new CGNode(*leftBottomLegNode);
+    rightTopLegNode->position = CGVector3(tableRightPosition,tableVerticalPosition,-0.8);
     
     
     tableNode->addChildNode(tableTopNode);
-    tableNode->addChildNode(leftLegNode);
+    tableNode->addChildNode(leftBottomLegNode);
+    tableNode->addChildNode(rightBottomLegNode);
+    tableNode->addChildNode(leftTopLegNode);
+    tableNode->addChildNode(rightTopLegNode);
+
+    
+    return tableNode;
+}
+
+void setupObjects() {
+    float zPosition = 0;
+
+    CGNode *tableNode = createTable();
+    
+    float roomHeight = 10;
     
     // Floor
     CGNode *floorNode  = new CGNode(new CGPlane(100,100));
     floorNode->position = CGVector3(0, 0, zPosition);
-    floorNode->rotation = CGVector4(1, 0, 0, 5);
     
-    // Left wall
-    CGNode *leftWallNode  = new CGNode(new CGPlane(100,100));
-    leftWallNode->position = CGVector3(0, 0, zPosition);
-    leftWallNode->rotation = CGVector4(1, 0, 0, -90);
+    // Roof
+    CGNode *roofNode  = new CGNode(new CGPlane(100,100));
+    roofNode->position = CGVector3(0, roomHeight, 0);
+    roofNode->rotation = CGVector4(1, 0, 0, 180);
+    
+    // Front wall
+    CGNode *frontWallNode  = new CGNode(new CGPlane(15,roomHeight));
+    frontWallNode->position = CGVector3(0, 0, 7.2);
+    frontWallNode->rotation = CGVector4(1, 0, 0, -90);
+    
+    // Back Wall
+    CGNode *backWallNode  = new CGNode(new CGPlane(15,roomHeight));
+    backWallNode->position = CGVector3(0, 0, -5);
+    backWallNode->rotation = CGVector4(1, 0, 0, -90);
+    
+    // Left Wall
+    CGNode *leftWallNode  = new CGNode(new CGPlane(15,roomHeight));
+    leftWallNode->position = CGVector3(-7, 0, 0);
+    leftWallNode->eulerAngles = CGVector3(90, 0, 90);
+    
+    // Left Wall
+    CGNode *rightWallNode  = new CGNode(new CGPlane(15,roomHeight));
+    rightWallNode->position = CGVector3(7, 0, 0);
+    rightWallNode->eulerAngles = CGVector3(90, 0, 90);
+    
     
     // Teapot
     CGGeometry *teapot = new CGTeapot(0.3);
@@ -424,19 +489,18 @@ void setupObjects() {
     icosahedronNode->position = CGVector3(0.7,0.9, zPosition);
     icosahedronNode->scale = CGVector3(0.3,0.3,0.3);
     
-    
-/*
+    // Setup Room
+    scene->rootNode->addChildNode(floorNode);
+    scene->rootNode->addChildNode(roofNode);
+    scene->rootNode->addChildNode(frontWallNode);
+    scene->rootNode->addChildNode(backWallNode);
+    scene->rootNode->addChildNode(leftWallNode);
+    scene->rootNode->addChildNode(rightWallNode);
     
     scene->rootNode->addChildNode(tableNode);
- //   scene->rootNode->addChildNode(cubeNode2);
- //   scene->rootNode->addChildNode(coneNode);
-    */
-    scene->rootNode->addChildNode(floorNode);
-   // scene->rootNode->addChildNode(leftWallNode);
- 
+    
     // Add ornaments
     scene->rootNode->addChildNode(teapotNode);
-    
     scene->rootNode->addChildNode(sphereNode);
     scene->rootNode->addChildNode(coneNode);
     scene->rootNode->addChildNode(torusNode);
@@ -501,7 +565,7 @@ int main(int argc, char * argv[]) {
     glutInitWindowPosition(100,100);
     
     //Name the window and create it
-    mainWindow = glutCreateWindow("3D App");
+    mainWindow = glutCreateWindow("Tea Time");
     glutSetWindow(mainWindow);
 
     //  Enable Z-buffer depth test

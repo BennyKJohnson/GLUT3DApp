@@ -35,6 +35,10 @@ typedef struct CGVector3 {
         this->z = z;
     }
     
+    bool operator==(const CGVector3& rhs) const
+    {
+        return x == rhs.x && y == rhs.y && z == rhs.z;
+    }
     
 } CGVector3;
 

@@ -30,11 +30,15 @@ public:
     
     void render();
     
+    float spotOuterAngle;
+    
     CGLight() {
     
         color = CGColorSimpleYellow();
         
         type = CGLightTypeAmbient;
+        
+        spotOuterAngle = 45.0;
     }
     
 };
