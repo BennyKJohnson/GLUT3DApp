@@ -45,7 +45,7 @@ GLfloat movementSpeed = 0.2;
 
 GLfloat cameraYaw = 0.0;
 
-GLfloat moveForward = 0.0;
+GLfloat moveForward = 1.0;
 
 GLfloat rotationSpeed = 2;
 
@@ -122,12 +122,12 @@ void updateCamera() {
         cameraYaw += 360.0;
     
     pointOfView->position.x += sinf(DEG2RAD(cameraYaw)) * moveForward;
-    pointOfView->position.y += -cos(DEG2RAD(cameraYaw)) * moveForward;
+    pointOfView->position.z += -cos(DEG2RAD(cameraYaw)) * moveForward;
     
     moveForward = 0;
     
     float lookAtX =  pointOfView->position.x + sin(DEG2RAD(cameraYaw));
-    float lookAtZ =  pointOfView->position.z + sin(DEG2RAD(cameraYaw));
+    float lookAtZ =  pointOfView->position.z - cos(DEG2RAD(cameraYaw));
     
     
     glLoadIdentity();
@@ -137,10 +137,8 @@ void updateCamera() {
     gluPerspective(camera->yFov, aspect, camera->zNear, camera->zFar);
     
     gluLookAt(pointOfView->position.x, pointOfView->position.y, pointOfView->position.z, lookAtX, 1.0, lookAtZ, 0, 1, 0);
+ 
 
-    
-    
-    
     glutPostRedisplay();
    // windowShouldRedraw();
 }
@@ -225,13 +223,13 @@ void specialKeyHandler(int key, int x, int y)
             //if arrow up pressed
         case GLUT_KEY_UP:
           //  teapotNode->position.x += 1;
-            pointOfView->position.x += movementSpeed;
-            
+           // pointOfView->position.x += movementSpeed;
+            moveForward += movementSpeed;
             //gMoveForward += gMovementSensitivity;             //increment forward movement
             break;
             //if arrow down pressed
         case GLUT_KEY_DOWN:
-            pointOfView->position.x -= movementSpeed;
+            moveForward -= movementSpeed;
 
             //gMoveForward -= gMovementSensitivity;             //increment backward movement
             break;
@@ -285,8 +283,7 @@ CGRect getWindowRect() {
     return CGRectMake((float)x, (float)y, (float)width, (float)height);
 }
 
-void render(void){
-    
+void render(void) {
   
     // Setup Scene background color
     CGColor backgroundColor = scene->backgroundColor;
@@ -297,26 +294,16 @@ void render(void){
     glMatrixMode(GL_MODELVIEW);     // To operate on model-view matrix
 
     glLoadIdentity();
-    // Set Camera
+    
+    // Setup Camera
     // actual vector representing the camera's direction
-    float lookX = sinf(pointOfView->rotation.w);
-    float lookZ = -cos(pointOfView->rotation.w);
-    //  lz=-1.0f;
+    float lookAtX =  pointOfView->position.x + sin(DEG2RAD(cameraYaw));
+    float lookAtZ =  pointOfView->position.z - cos(DEG2RAD(cameraYaw));
     
-    float x = pointOfView->position.x ;
-    float z = pointOfView->position.z;
-    
-   // CGVector3 lookAt = CGVector3(0,0, 0)
+    gluLookAt(pointOfView->position.x, pointOfView->position.y, pointOfView->position.z, lookAtX, 1.0, lookAtZ, 0, 1, 0);
 
-    
-  //  gluLookAt(pointOfView->position.x, pointOfView->position.y, pointOfView->position.z, x + lookX, 1.0, z + lookZ, 0, 1, 0);
-    
-    // Set background color to white and opaque
-   // glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
-    
     scene->render();
     
-  //  glutSwapBuffers();
     glFlush();
 
 }
@@ -343,7 +330,9 @@ void setupCamera() {
     // Setup Camera
     CGCamera *sceneCamera = new CGCamera();
     CGNode *cameraNode = new CGNode();
-    cameraNode->position = CGVector3(0,1,0);
+    // x, y ,z modifiying in z- is back
+    cameraNode->position = CGVector3(0,1,5);
+    //cameraNode->position = CGVector3(0,10,15);
     cameraNode->camera = sceneCamera;
     pointOfView = cameraNode;
     
@@ -351,9 +340,11 @@ void setupCamera() {
 
 void setupObjects() {
     
+    float zPosition = 0;
+    
     // Table
     CGNode *tableNode = new CGNode();
-    tableNode->position = CGVector3(0, 0, -7);
+    tableNode->position = CGVector3(0, 0, zPosition);
     //cubeNode->rotation = CGVector4(1, 1, 0, 45);
     
     CGNode *tableTopNode = new CGNode(new CGBox(1,1,1));
@@ -371,31 +362,31 @@ void setupObjects() {
     
     // Floor
     CGNode *floorNode  = new CGNode(new CGPlane(100,100));
-    floorNode->position = CGVector3(0, 0, -7);
+    floorNode->position = CGVector3(0, 0, zPosition);
     floorNode->rotation = CGVector4(1, 0, 0, 5);
     
     // Left wall
     CGNode *leftWallNode  = new CGNode(new CGPlane(100,100));
-    leftWallNode->position = CGVector3(0, 0, -7);
+    leftWallNode->position = CGVector3(0, 0, zPosition);
     leftWallNode->rotation = CGVector4(1, 0, 0, -90);
     
     // Teapot
     CGGeometry *teapot = new CGTeapot(0.3);
     teapot->setMaterial(CGPresentMaterial::goldMaterial());
     CGNode *teapotNode = new CGNode(teapot);
-    teapotNode->position = CGVector3(0 , 1.15, -7);
+    teapotNode->position = CGVector3(0 , 1.15, zPosition);
     
     // Sphere
     CGSphere *sphere = new CGSphere(0.2);
     sphere->setMaterial(CGPresentMaterial::jadeMaterial());
     CGNode *sphereNode = new CGNode(sphere);
-    sphereNode->position = CGVector3(-1, 1.2, -7);
+    sphereNode->position = CGVector3(-1, 1.2, zPosition);
     
     // Cone
     CGCone *cone = new CGCone(0.15 , 0.3);
     cone->setMaterial(CGPresentMaterial::blueMaterial());
     CGNode *coneNode = new CGNode(cone);
-    coneNode->position = CGVector3(1, 1.0, -7);
+    coneNode->position = CGVector3(1, 1.0, zPosition);
     coneNode->rotation = CGVector4(1,0,0,-90);
     
     // Torus
@@ -403,34 +394,34 @@ void setupObjects() {
     torus->setMaterial(CGPresentMaterial::copperMaterial());
     CGNode *torusNode = new CGNode(torus);
     
-    torusNode->position = CGVector3(0.7, 1.2, -7);
+    torusNode->position = CGVector3(0.7, 1.2, zPosition);
 
     // Dodecahedron
     CGDodecahedron *dodecahedron = new CGDodecahedron();
     dodecahedron->setMaterial(CGPresentMaterial::rubyMaterial());
     CGNode *dodecahedronNode = new CGNode(dodecahedron);
-    dodecahedronNode->position = CGVector3(0.7, 1.2, -7);
+    dodecahedronNode->position = CGVector3(0.7, 1.2, zPosition);
     dodecahedronNode->scale = CGVector3(0.1,0.1,0.1);
     
     // Octahedron
     CGOctahedron *octahedron = new CGOctahedron();
     octahedron->setMaterial(CGPresentMaterial::cyanMaterial());
     CGNode *octahedronNode = new CGNode(octahedron);
-    octahedronNode->position = CGVector3(-0.1,0.9, -7);
+    octahedronNode->position = CGVector3(-0.1,0.9, zPosition);
     octahedronNode->scale = CGVector3(0.2,0.2,0.2);
     
     // Tetrahedron
     CGTetrahedron *tetrahedron = new CGTetrahedron();
     tetrahedron->setMaterial(CGPresentMaterial::redMaterial());
     CGNode *tetrahedronNode = new CGNode(tetrahedron);
-    tetrahedronNode->position = CGVector3(0.7,0.7, -7);
+    tetrahedronNode->position = CGVector3(0.7,0.7, zPosition);
     tetrahedronNode->scale = CGVector3(0.5,0.5,0.5);
     
     // Icosahedron
     CGIcosahedron *icosahedron = new CGIcosahedron();
     icosahedron->setMaterial(CGPresentMaterial::rubyMaterial());
     CGNode *icosahedronNode = new CGNode(icosahedron);
-    icosahedronNode->position = CGVector3(0.7,0.9, -7);
+    icosahedronNode->position = CGVector3(0.7,0.9, zPosition);
     icosahedronNode->scale = CGVector3(0.3,0.3,0.3);
     
     
@@ -445,8 +436,6 @@ void setupObjects() {
  
     // Add ornaments
     scene->rootNode->addChildNode(teapotNode);
-
-    
     
     scene->rootNode->addChildNode(sphereNode);
     scene->rootNode->addChildNode(coneNode);
