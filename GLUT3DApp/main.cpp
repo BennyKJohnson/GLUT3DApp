@@ -531,7 +531,8 @@ void initOpenGL() {
     glutReshapeFunc(resize);
     glutMouseFunc(mouseHandler);
     glutIdleFunc(render);
-    
+    glEnable(GL_MULTISAMPLE_ARB);
+
     setupScene();
     
     glClearDepth(1.0f);       // Set background depth to farthest
@@ -553,7 +554,7 @@ int main(int argc, char * argv[]) {
     glutInit(&argc, argv);
 #endif
     
-    glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB | GLUT_DEPTH);      //requests properties for the window (sets up the rendering context)
+    glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB | GLUT_DEPTH | GLUT_MULTISAMPLE);      //requests properties for the window (sets up the rendering context)
 
     //Specify the Display Mode, this one means there is a single buffer and uses RGB to specify colors
     // glutInitDisplayMode(GLUT_DEPTH| GLUT_DOUBLE |GLUT_RGB);
@@ -563,6 +564,9 @@ int main(int argc, char * argv[]) {
     
     //Where do we want to place the window initially?
     glutInitWindowPosition(100,100);
+    
+
+
     
     //Name the window and create it
     mainWindow = glutCreateWindow("Tea Time");
