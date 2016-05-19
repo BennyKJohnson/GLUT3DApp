@@ -43,10 +43,19 @@ public:
         
     }
     
+    static CGMaterial* brownMaterial() {
+        
+        CGMaterial *material = new CGMaterial();
+        material->diffuse = CGColorBrown();
+        
+        return material;
+        
+    }
+    
     static CGMaterial* orangeMaterial() {
         
         CGMaterial *material = new CGMaterial();
-        material->diffuse = CGColorSimpleOrange();
+        material->diffuse = CGColorRed();
         
         return material;
         

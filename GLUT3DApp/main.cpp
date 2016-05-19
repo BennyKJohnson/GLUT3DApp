@@ -51,9 +51,17 @@ GLenum shadeModel = GL_SMOOTH;
 
 GLenum cullFaceMode = GL_BACK;
 
+GLfloat lightAttenuation = 0.0;
+
 bool yellowAmbientEnabled = false;
 
 void resetCamera();
+
+CGLight *light;
+
+std::string *helpString;
+
+bool showInstructions;
 
 void setOGLProjection(int width, int height) {
     glViewport(0, 0, width, height);
@@ -205,10 +213,26 @@ void keyboardHandler(unsigned char key, int x, int y)
         case 'r':
             resetCamera();
             break;
+        case 'o':
+            light->attenuationFalloffExponent -= 0.01;
+            glutPostRedisplay();
+            break;
+        case 'p':
+            light->attenuationFalloffExponent += 0.01;
+            glutPostRedisplay();
+            break;
+        case 'h':
+            showInstructions = !showInstructions;
+            glutPostRedisplay();
+            break;
         default:
             break;
     };
+
+
 }
+
+
 
 
 //called when non-ASCII key pressed
@@ -290,7 +314,7 @@ CGRect getWindowRect() {
 }
 
 void render(void) {
-  
+
     // Setup Scene background color
     CGColor backgroundColor = scene->backgroundColor;
     glClearColor(backgroundColor.r, backgroundColor.g, backgroundColor.b, backgroundColor.a);
@@ -301,6 +325,14 @@ void render(void) {
 
     glLoadIdentity();
     
+    
+    if (showInstructions) {
+        setContextColor(CGColorWhite());
+        renderBitmapString(-2.0, -0.9, helpString, GLUT_BITMAP_HELVETICA_12);
+    }
+
+    
+    
     // Setup Camera
     // actual vector representing the camera's direction
     float lookAtX =  pointOfView->position.x + sin(DEG2RAD(cameraYaw));
@@ -310,26 +342,38 @@ void render(void) {
 
     scene->render();
     
-    glFlush();
-
+    glutSwapBuffers();
 }
 
 void setupLights() {
     
-    CGLight *light1 = new CGLight();
-    CGNode *lightNode = new CGNode();
-    lightNode->position = CGVector3(5.0, 15.0, 5.0);
-    lightNode->light = light1;
-    light1->color = CGColorWhite();
+    light = new CGLight();
+    CGNode *rightLightNode = new CGNode();
+    rightLightNode->position = CGVector3(5, 5, 0);
+    rightLightNode->light = light;
+    light->color = CGColorWhite();
     
-    CGLight *light2 = new CGLight();
-    light2->color = CGColorBlue();
-    CGNode *lightNode2 = new CGNode();
-    lightNode2->position = CGVector3(6.0, 15.0, 5.0);
-    lightNode2->light = light2;
+    CGLight *leftLight = new CGLight();
+    leftLight->color = CGColorBlue();
+    leftLight->constantAttenuation = 5.0;
+    CGNode *leftLightNode = new CGNode();
+    leftLightNode->position = CGVector3(-5, 5, 0);
+    leftLightNode->light = leftLight;
+    leftLightNode->scale = CGVector3(0.1,0.1,0.1);
     
-    scene->rootNode->addChildNode(lightNode);
-  //  scene->rootNode->addChildNode(lightNode2);
+    // Spot Light
+    
+    CGNode *spotLightNode = new CGNode();
+    spotLightNode->position = CGVector3(0,5,0);
+    CGLight *spotlight = new CGLight();
+    spotlight->type = CGLightTypeSpot;
+    spotLightNode->light = spotlight;
+//    spotLightNode->geometry = new CGBox(1,1,1);
+    
+    
+    scene->rootNode->addChildNode(rightLightNode);
+    scene->rootNode->addChildNode(leftLightNode);
+    scene->rootNode->addChildNode(spotLightNode);
 }
 
 void setupCamera() {
@@ -366,7 +410,7 @@ CGNode* createTable() {
     //cubeNode->rotation = CGVector4(1, 1, 0, 45);
     
     CGBox *tableComponent = new CGBox(1,1,1);
-    tableComponent->setMaterial(CGPresentMaterial::orangeMaterial());
+    tableComponent->setMaterial(CGPresentMaterial::brownMaterial());
     
     
     CGNode *tableTopNode = new CGNode(tableComponent);
@@ -554,7 +598,7 @@ int main(int argc, char * argv[]) {
     glutInit(&argc, argv);
 #endif
     
-    glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB | GLUT_DEPTH | GLUT_MULTISAMPLE);      //requests properties for the window (sets up the rendering context)
+    glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB | GLUT_DEPTH | GLUT_MULTISAMPLE | GLUT_DOUBLE);      //requests properties for the window (sets up the rendering context)
 
     //Specify the Display Mode, this one means there is a single buffer and uses RGB to specify colors
     // glutInitDisplayMode(GLUT_DEPTH| GLUT_DOUBLE |GLUT_RGB);
@@ -575,6 +619,8 @@ int main(int argc, char * argv[]) {
     //  Enable Z-buffer depth test
     glEnable(GL_DEPTH_TEST);
     
+    helpString = new std::string("z - Shading, d - Depth Test, c - Cull Face, f - Cull front face, h - Help, m - Color Tracking, l - Ambient Lighting, r - Reset Camera");
+    showInstructions = true;
     initOpenGL();
     
     //Start the main loop running, nothing after this will execute for all eternity (right now)

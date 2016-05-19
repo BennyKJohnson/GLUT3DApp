@@ -90,6 +90,10 @@ void CGScene::renderNode(CGNode *node) {
         glLightfv(lightID, GL_AMBIENT, colorValues);
         glLightfv(lightID, GL_DIFFUSE, colorValues);
         
+        glLightf(lightID, GL_QUADRATIC_ATTENUATION, light->attenuationFalloffExponent);
+        glLightf(lightID, GL_LINEAR_ATTENUATION, light->linearAttenuation);
+        glLightf(lightID, GL_CONSTANT_ATTENUATION, light->constantAttenuation);
+    
         if (light->type == CGLightTypeSpot) {
             
             // Set Spot light related properties

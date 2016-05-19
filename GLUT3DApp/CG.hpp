@@ -136,6 +136,7 @@ CGColor CGColorBlue();
 CGColor CGColorGreen();
 CGColor CGColorBlack();
 CGColor CGColorWhite();
+CGColor CGColorBrown();
 CGColor CGColorClearColor();
 
 CGColor statusBarColor();

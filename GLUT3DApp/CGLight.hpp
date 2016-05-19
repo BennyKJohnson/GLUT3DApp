@@ -32,6 +32,12 @@ public:
     
     float spotOuterAngle;
     
+    float attenuationFalloffExponent;
+    
+    float constantAttenuation;
+    
+    float linearAttenuation;
+    
     CGLight() {
     
         color = CGColorSimpleYellow();
@@ -39,6 +45,12 @@ public:
         type = CGLightTypeAmbient;
         
         spotOuterAngle = 45.0;
+        
+        attenuationFalloffExponent = 0.0;
+        
+        constantAttenuation = 1.5; // Smaller the brighter
+        
+        linearAttenuation = 0.0; // Smaller the brighter
     }
     
 };
