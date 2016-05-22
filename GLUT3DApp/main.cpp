@@ -59,6 +59,12 @@ void resetCamera();
 
 CGLight *light;
 
+CGNode *leftLightNode;
+
+CGNode *rightLightNode;
+
+CGNode *spotLightNode;
+
 std::string *helpString;
 
 bool showInstructions;
@@ -225,6 +231,19 @@ void keyboardHandler(unsigned char key, int x, int y)
             showInstructions = !showInstructions;
             glutPostRedisplay();
             break;
+        case '1':
+            // Toggle Light 1
+            leftLightNode->hidden = !leftLightNode->hidden;
+            break;
+        case '2':
+            // Toggle Light 2
+            rightLightNode->hidden = !rightLightNode->hidden;
+            break;
+        case '3':
+            spotLightNode->hidden = !spotLightNode->hidden;
+            break;
+            
+            
         default:
             break;
     };
@@ -347,23 +366,30 @@ void render(void) {
 
 void setupLights() {
     
+    CGSphere *lightSphere = new CGSphere(0.2);
+    CGMaterial *emissionMaterial = new CGMaterial();
+    emissionMaterial->emission = CGColorWhite();
+    lightSphere->setMaterial(emissionMaterial);
+    
+    
     light = new CGLight();
-    CGNode *rightLightNode = new CGNode();
+    rightLightNode = new CGNode();
     rightLightNode->position = CGVector3(5, 5, 0);
     rightLightNode->light = light;
+    rightLightNode->geometry = lightSphere;
     light->color = CGColorWhite();
     
     CGLight *leftLight = new CGLight();
     leftLight->color = CGColorBlue();
     leftLight->constantAttenuation = 5.0;
-    CGNode *leftLightNode = new CGNode();
+    leftLightNode = new CGNode();
     leftLightNode->position = CGVector3(-5, 5, 0);
     leftLightNode->light = leftLight;
-    leftLightNode->scale = CGVector3(0.1,0.1,0.1);
+    leftLightNode->geometry = lightSphere;
     
     // Spot Light
     
-    CGNode *spotLightNode = new CGNode();
+    spotLightNode = new CGNode();
     spotLightNode->position = CGVector3(0,5,0);
     CGLight *spotlight = new CGLight();
     spotlight->type = CGLightTypeSpot;
@@ -394,6 +420,56 @@ void resetCamera() {
     cameraYaw = 0;
     
     glutPostRedisplay();
+}
+
+CGNode* createChair() {
+    
+    float zPosition = 0;
+    
+    // Table
+    float tableLeftPosition = -0.25;
+    float tableRightPosition = 0.25;
+    float tableVerticalPosition = 0;
+    
+    CGNode *tableNode = new CGNode();
+    tableNode->position = CGVector3(0, 0, zPosition);
+    //cubeNode->rotation = CGVector4(1, 1, 0, 45);
+    
+    CGBox *tableComponent = new CGBox(1,1,1);
+    tableComponent->setMaterial(CGPresentMaterial::brownMaterial());
+    
+    
+    CGNode *tableTopNode = new CGNode(tableComponent);
+    tableTopNode->scale = CGVector3(0.5,0.03,0.5);
+    tableTopNode->position = CGVector3(0,0.8,0);
+    
+    
+    CGNode *leftBottomLegNode = new CGNode(tableComponent);
+    leftBottomLegNode->scale = CGVector3(0.06,0.8,0.06);
+    leftBottomLegNode->position = CGVector3(tableLeftPosition, tableVerticalPosition, 0.25);
+    
+    CGNode *rightBottomLegNode = new CGNode(*leftBottomLegNode);
+    rightBottomLegNode->position = CGVector3(tableRightPosition,tableVerticalPosition,0.25);
+    
+    CGNode *leftTopLegNode = new CGNode(*leftBottomLegNode);
+    leftTopLegNode->position = CGVector3(tableLeftPosition,tableVerticalPosition,-0.25);
+    
+    CGNode *rightTopLegNode = new CGNode(*leftBottomLegNode);
+    rightTopLegNode->position = CGVector3(tableRightPosition,tableVerticalPosition,-0.25);
+    
+    
+    tableNode->addChildNode(tableTopNode);
+    tableNode->addChildNode(leftBottomLegNode);
+    tableNode->addChildNode(rightBottomLegNode);
+    tableNode->addChildNode(leftTopLegNode);
+    tableNode->addChildNode(rightTopLegNode);
+    
+    
+    return tableNode;
+    
+    
+    
+    
 }
 
 CGNode* createTable() {
@@ -443,11 +519,21 @@ CGNode* createTable() {
 }
 
 void setupObjects() {
+    
     float zPosition = 0;
-
-    CGNode *tableNode = createTable();
     
     float roomHeight = 10;
+    
+    // Table
+    CGNode *tableNode = createTable();
+
+    // Chair
+    
+    CGNode *rightChairNode = createChair();
+    rightChairNode->position = CGVector3(2,0,0);
+    
+    CGNode *leftChairNode = createChair();
+    leftChairNode->position = CGVector3(-2,0,0);
     
     // Floor
     CGNode *floorNode  = new CGNode(new CGPlane(100,100));
@@ -461,12 +547,12 @@ void setupObjects() {
     // Front wall
     CGNode *frontWallNode  = new CGNode(new CGPlane(15,roomHeight));
     frontWallNode->position = CGVector3(0, 0, 7.2);
-    frontWallNode->rotation = CGVector4(1, 0, 0, -90);
+    frontWallNode->rotation = CGVector4(1, 0, 0, 90);
     
     // Back Wall
     CGNode *backWallNode  = new CGNode(new CGPlane(15,roomHeight));
     backWallNode->position = CGVector3(0, 0, -5);
-    backWallNode->rotation = CGVector4(1, 0, 0, -90);
+    backWallNode->rotation = CGVector4(1, 0, 0, 90);
     
     // Left Wall
     CGNode *leftWallNode  = new CGNode(new CGPlane(15,roomHeight));
@@ -503,11 +589,11 @@ void setupObjects() {
     torus->setMaterial(CGPresentMaterial::copperMaterial());
     CGNode *torusNode = new CGNode(torus);
     
-    torusNode->position = CGVector3(0.7, 1.2, zPosition);
+    torusNode->position = CGVector3(-0.5, 1.2, zPosition);
 
     // Dodecahedron
     CGDodecahedron *dodecahedron = new CGDodecahedron();
-    dodecahedron->setMaterial(CGPresentMaterial::rubyMaterial());
+    dodecahedron->setMaterial(CGPresentMaterial::redMaterial());
     CGNode *dodecahedronNode = new CGNode(dodecahedron);
     dodecahedronNode->position = CGVector3(0.7, 1.2, zPosition);
     dodecahedronNode->scale = CGVector3(0.1,0.1,0.1);
@@ -516,7 +602,7 @@ void setupObjects() {
     CGOctahedron *octahedron = new CGOctahedron();
     octahedron->setMaterial(CGPresentMaterial::cyanMaterial());
     CGNode *octahedronNode = new CGNode(octahedron);
-    octahedronNode->position = CGVector3(-0.1,0.9, zPosition);
+    octahedronNode->position = CGVector3(-0.1,1.5, zPosition - 0.5);
     octahedronNode->scale = CGVector3(0.2,0.2,0.2);
     
     // Tetrahedron
@@ -524,7 +610,7 @@ void setupObjects() {
     tetrahedron->setMaterial(CGPresentMaterial::redMaterial());
     CGNode *tetrahedronNode = new CGNode(tetrahedron);
     tetrahedronNode->position = CGVector3(0.7,0.7, zPosition);
-    tetrahedronNode->scale = CGVector3(0.5,0.5,0.5);
+    tetrahedronNode->scale = CGVector3(0.3,0.3,0.3);
     
     // Icosahedron
     CGIcosahedron *icosahedron = new CGIcosahedron();
@@ -533,6 +619,7 @@ void setupObjects() {
     icosahedronNode->position = CGVector3(0.7,0.9, zPosition);
     icosahedronNode->scale = CGVector3(0.3,0.3,0.3);
     
+
     // Setup Room
     scene->rootNode->addChildNode(floorNode);
     scene->rootNode->addChildNode(roofNode);
@@ -541,17 +628,25 @@ void setupObjects() {
     scene->rootNode->addChildNode(leftWallNode);
     scene->rootNode->addChildNode(rightWallNode);
     
-    scene->rootNode->addChildNode(tableNode);
+    scene->rootNode->addChildNode(leftChairNode);
+    scene->rootNode->addChildNode(rightChairNode);
     
+    scene->rootNode->addChildNode(tableNode);
+
     // Add ornaments
+    
     scene->rootNode->addChildNode(teapotNode);
     scene->rootNode->addChildNode(sphereNode);
     scene->rootNode->addChildNode(coneNode);
+    
     scene->rootNode->addChildNode(torusNode);
     scene->rootNode->addChildNode(dodecahedronNode);
     scene->rootNode->addChildNode(octahedronNode);
     scene->rootNode->addChildNode(tetrahedronNode);
+
+    
     scene->rootNode->addChildNode(icosahedronNode);
+    
 
 }
 
@@ -619,7 +714,7 @@ int main(int argc, char * argv[]) {
     //  Enable Z-buffer depth test
     glEnable(GL_DEPTH_TEST);
     
-    helpString = new std::string("z - Shading, d - Depth Test, c - Cull Face, f - Cull front face, h - Help, m - Color Tracking, l - Ambient Lighting, r - Reset Camera");
+    helpString = new std::string("z - Shading, d - Depth Test, c - Cull, f - Cull front, h - Help, m - Color Tracking, l - Ambient Lighting, r - Reset Camera, 1-3 on/off lights");
     showInstructions = true;
     initOpenGL();
     
